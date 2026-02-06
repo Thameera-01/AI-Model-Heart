@@ -4,55 +4,18 @@ This API provides a prediction endpoint that takes user health data
 and returns a heart disease risk prediction using the trained model.
 """
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
+from contextlib import asynccontextmanager
 import tensorflow as tf
 import numpy as np
 import joblib
 import os
 from typing import Optional
 
-# Initialize FastAPI app
-app = FastAPI(
-    title="Heart Disease Prediction API",
-    description="API for predicting heart disease risk based on health parameters",
-    version="1.0.0"
-)
-
 # Global variables for model and scalers
 model = None
 scaler_data = None
 scaler_target = None
-
-# Define input schema using Pydantic
-class HealthData(BaseModel):
-    """Input schema for health data"""
-    gender: int = Field(..., ge=0, le=1, description="Gender: 0 for Male, 1 for Female")
-    age: int = Field(..., ge=1, le=120, description="Age in years")
-    tc: float = Field(..., gt=0, description="Total Cholesterol (TC)")
-    hdl: float = Field(..., gt=0, description="HDL Cholesterol")
-    smoke: int = Field(..., ge=0, le=1, description="Smoking status: 0 for Non-Smoker, 1 for Smoker")
-    bpm: int = Field(..., ge=0, le=1, description="High blood pressure: 0 for No, 1 for Yes")
-    diabetes: int = Field(..., ge=0, le=1, description="Diabetes: 0 for No, 1 for Yes")
-    
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "gender": 0,
-                "age": 54,
-                "tc": 128.0,
-                "hdl": 42.0,
-                "smoke": 0,
-                "bpm": 1,
-                "diabetes": 0
-            }
-        }
-
-# Define output schema
-class PredictionResponse(BaseModel):
-    """Output schema for prediction"""
-    risk_score: float = Field(..., description="Predicted risk score (0-1)")
-    risk_level: str = Field(..., description="Risk level: Low, Medium, or High")
-    message: str = Field(..., description="Additional information about the prediction")
 
 def load_model_and_scalers():
     """Load the trained model and scalers"""
@@ -82,13 +45,56 @@ def load_model_and_scalers():
         print(f"Error loading model and scalers: {str(e)}")
         return False
 
-@app.on_event("startup")
-async def startup_event():
-    """Load model on startup"""
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup and shutdown events"""
+    # Startup
     success = load_model_and_scalers()
     if not success:
         print("WARNING: Failed to load model. API will not work properly.")
         print("Please run 'python train_model.py' to create the model files.")
+    yield
+    # Shutdown (cleanup if needed)
+
+# Initialize FastAPI app with lifespan
+app = FastAPI(
+    title="Heart Disease Prediction API",
+    description="API for predicting heart disease risk based on health parameters",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# Define input schema using Pydantic
+class HealthData(BaseModel):
+    """Input schema for health data"""
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "gender": 0,
+                "age": 54,
+                "tc": 128.0,
+                "hdl": 42.0,
+                "smoke": 0,
+                "bpm": 1,
+                "diabetes": 0
+            }
+        }
+    )
+    
+    gender: int = Field(..., ge=0, le=1, description="Gender: 0 for Male, 1 for Female")
+    age: int = Field(..., ge=1, le=120, description="Age in years")
+    tc: float = Field(..., gt=0, description="Total Cholesterol (TC)")
+    hdl: float = Field(..., gt=0, description="HDL Cholesterol")
+    smoke: int = Field(..., ge=0, le=1, description="Smoking status: 0 for Non-Smoker, 1 for Smoker")
+    bpm: int = Field(..., ge=0, le=1, description="High blood pressure: 0 for No, 1 for Yes")
+    diabetes: int = Field(..., ge=0, le=1, description="Diabetes: 0 for No, 1 for Yes")
+
+# Define output schema
+class PredictionResponse(BaseModel):
+    """Output schema for prediction"""
+    risk_score: float = Field(..., description="Predicted risk score (0-1)")
+    risk_level: str = Field(..., description="Risk level: Low, Medium, or High")
+    message: str = Field(..., description="Additional information about the prediction")
 
 @app.get("/")
 async def root():

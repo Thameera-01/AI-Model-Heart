@@ -4,8 +4,8 @@ This script creates a sample model and scalers for demonstration purposes.
 In production, this should be trained with actual data.
 """
 import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense, Dropout
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 import joblib
