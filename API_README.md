@@ -67,13 +67,15 @@ The API will be available at `http://localhost:8000`
 
 | Parameter | Type | Range | Description |
 |-----------|------|-------|-------------|
-| gender | int | 0-1 | Gender (0: Male, 1: Female) |
+| gender | int | 0-1 | Gender (0: Male, 1: Female) - Binary field based on training data |
 | age | int | 1-120 | Age in years |
 | tc | float | >0 | Total Cholesterol |
 | hdl | float | >0 | HDL Cholesterol |
 | smoke | int | 0-1 | Smoking status (0: Non-Smoker, 1: Smoker) |
 | bpm | int | 0-1 | High blood pressure (0: No, 1: Yes) |
 | diabetes | int | 0-1 | Diabetes (0: No, 1: Yes) |
+
+**Note:** The gender field is binary due to the structure of the training data. In production, this should be updated to support more inclusive gender representations based on the available medical data.
 
 ### Risk Levels
 

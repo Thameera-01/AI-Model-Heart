@@ -81,7 +81,7 @@ class HealthData(BaseModel):
         }
     )
     
-    gender: int = Field(..., ge=0, le=1, description="Gender: 0 for Male, 1 for Female")
+    gender: int = Field(..., ge=0, le=1, description="Gender: 0 for Male, 1 for Female (binary field based on training data)")
     age: int = Field(..., ge=1, le=120, description="Age in years")
     tc: float = Field(..., gt=0, description="Total Cholesterol (TC)")
     hdl: float = Field(..., gt=0, description="HDL Cholesterol")

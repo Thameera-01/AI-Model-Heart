@@ -8,6 +8,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
 import joblib
 import os
 
@@ -88,7 +89,6 @@ history = model.fit(
 )
 
 # Evaluate
-from sklearn.metrics import r2_score
 y_pred = model.predict(test_data)
 r2 = r2_score(test_target, y_pred)
 print(f'\nR2 Score: {r2:.4f}')
