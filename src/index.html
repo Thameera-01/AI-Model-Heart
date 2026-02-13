@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Health AI</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+
+    <div class="container">
+        <h1>Heart Risk Predictor</h1>
+        
+        <div id="form-section">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="Enter Name">
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="gender">
+                        <option value="0">Male</option>
+                        <option value="1">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" id="age" min="1" max="120">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Total Cholesterol (TC)</label>
+                    <input type="number" step="any" id="tc">
+                </div>
+                <div class="form-group">
+                    <label>HDL Cholesterol</label>
+                    <input type="number" step="any" id="hdl">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Smoking Status</label>
+                <select id="smoke">
+                    <option value="0">Non-Smoker</option>
+                    <option value="1">Active Smoker</option>
+                </select>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>High Blood Pressure?</label>
+                    <select id="bpm">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Diabetic?</label>
+                    <select id="diab">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="runPrediction()" class="btn">Analyze Risk Profile</button>
+        </div>
+
+        <div id="loading" class="hidden">
+            <h3>Analyzing data... please wait.</h3>
+        </div>
+
+        <div id="result-section" class="hidden result-card">
+            <h2>Analysis Complete</h2>
+            <p>Results for <strong id="res-name"></strong></p>
+            <div id="res-score" class="score"></div>
+            <p>This score indicates the calculated risk level based on your clinical inputs.</p>
+            <hr>
+            <button onclick="location.reload()" class="btn btn-red">Perform Another Test</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
