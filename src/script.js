@@ -21,7 +21,7 @@ async function runPrediction() {
 
     try {
         // api calling
-        const response = await fetch('http://localhost:5000/predict', {
+        const response = await fetch('http://localhost:3000/predict', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
@@ -42,7 +42,7 @@ async function runPrediction() {
 
     } catch (error) {
         console.error("Connection Error:", error);
-        alert("Connection Failed! Make sure Docker is running on Port 5000.");
+        alert("Connection Failed! Make sure Docker is running on Port 3000.");
         
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('form-section').classList.remove('hidden');
@@ -71,4 +71,5 @@ function showResult(name, value) {
     } else {
         scoreElement.style.color = "#ef4444"; 
     }
+
 }
